@@ -1,0 +1,19 @@
+DirectoryIndex load.html
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+#Deny From All
+RewriteEngine on
+
+#For search engines
+RewriteCond %{QUERY_STRING} _escaped_fragment_
+RewriteRule ^(.*)$ shot.php?url=$1 [L,QSA]
+
+RewriteRule ^api/(.+)$ rpc.php?api=$1 [L,QSA]
+RewriteRule ^api(.*)$ rpc.php?api=main/home$1 [L,QSA]
+
+#refactor but idk how.
+RewriteRule ^libs/(.*)$ /phoxy/$0 [L,QSA]
+RewriteRule ^phoxy(.*).js$ /phoxy/$0 [L,QSA]
+
+</IfModule>
