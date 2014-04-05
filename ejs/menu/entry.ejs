@@ -1,1 +1,31 @@
-Menu
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <a class="navbar-brand " href="#">
+      <img id='phoxy_ajax_active' src='res/ajax.png' style='display: inline; float: left;'/>
+      ...
+    </a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+    <%
+      var menu =
+      {
+        left :
+        {
+          "aa" : "bb"
+        },
+        right :
+        {
+          "cc" : "dd"
+        }
+      };
+    %>
+    <%= phoxy.DeferRender('menu/menu_block', {menu: menu.left}) %>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <%= phoxy.DeferRender('menu/menu_block', {menu: menu.right}) %>
+    </ul>
+  </div>
+</nav>

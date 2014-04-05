@@ -8,4 +8,8 @@ class main extends api
       "design" => 'main/body'
     ];
   }
+  
+  protected function Home()
+  {
+  }
 }
