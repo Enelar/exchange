@@ -6,7 +6,7 @@ for (var k in menu)
   v = menu[k];
 %>
   <li>
-    <%= DeferRender('menu/menu_element', {url: v, name: k}) %>
+    <%= phoxy.DeferRender('menu/menu_element', {url: v, name: k}) %>
   </li>
 <%
 }
