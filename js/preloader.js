@@ -18,38 +18,35 @@ var preloader = function()
   var ret =
   {
     id : '#' + id  
-    ,
-    StartAnimation : function()
-    {
-      phoxy.Defer.call(this, this.ContinueAnimation, frame_delay);
-    }
     ,  
     index: 0
     ,
-    ContinueAnimation : function()
+    StartAnimation : function()
+    {
+      this.index++;
+      
+      var max_fault_seconds = 10;
+      if (this.index > max_fault_seconds * 1000 / frame_delay)
+        return;
+
+      var selector = $(this.id);
+      if (selector[0] == undefined)
+        return phoxy.Defer.call(this, this.StartAnimation, frame_delay);
+      this.img = selector;
+      this.Animation();
+    }
+    ,
+    Animation : function()
     {
       this.index++;
       
       if (this.index >= frames)
         this.index = 0;
 
-      if (this.img == undefined)
-      {
-        var selector = $(this.id);
-        if (selector[0] == undefined)        
-          return phoxy.Defer.call(this, this.ContinueAnimation, frame_delay);
-        this.img = selector;
-      }
-
       this.img.css({'backgroundPosition' : -this.index * frame_size + 'px 0'});
 
-      if (this.img.width() != undefined && this.img.attr('stop') == undefined)
-        phoxy.Defer.call(this, this.ContinueAnimation, frame_delay);
-    }
-    ,
-    StopAnimation : function()
-    {
-      this.img.attr('stop', 'true');
+      if (this.img.width() != undefined)
+        phoxy.Defer.call(this, this.Animation, frame_delay);
     }
   };
   ret.StartAnimation();
