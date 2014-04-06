@@ -48,7 +48,7 @@ CONSTRAINT "orders_remain_check" CHECK ((remain)::numeric <= (amount)::numeric),
 CONSTRAINT "orders_check" CHECK ((remain)::numeric >= (0)::numeric),
 CONSTRAINT "orders_amount_check" CHECK ((amount)::numeric > (0)::numeric),
 
-CONSTRAINT "fictive_orders" CHECK (currency != (price).currency AND (price).amount = 1) 
+CONSTRAINT "fictive_orders" CHECK (currency != (price).currency OR (price).amount = 1) 
 )
 WITH (OIDS=FALSE)
 ;
@@ -102,6 +102,7 @@ CREATE OR REPLACE VIEW "orders"."active_sell" AS
 -- Transactions
 -- ----------------------------
 
+DROP TABLE IF EXISTS "orders"."transactions";
 CREATE TABLE "orders"."transactions"
 (
   "id" int8 NOT NULL,
