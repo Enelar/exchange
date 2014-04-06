@@ -23,6 +23,19 @@ class orders extends api
   
   private function Add( $from, $to, $amount, $price, $is_buy )
   {
-    phoxy_protected_assert(0, ["error" => "TODO: Add order"]);
+    $res =
+      db::Query("INSERT INTO orders.orders
+      (is_buy, currency, amount, remain, price)
+      VALUES
+      ($1, $2, $3, $3, ROW($4, $5))
+      RETURNING id",
+      [$is_buy, $from, $amount, $to, $price],
+      true);
+    return ["data" => ["order_id" => $res['id']]];
+  }
+  
+  protected function Cancel( $id )
+  {
+    db::Query("DELETE FROM orders.orders WHERE id=$1", [$id]);
   }
 }
