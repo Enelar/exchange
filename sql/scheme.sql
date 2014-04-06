@@ -6,4 +6,9 @@ CREATE TYPE public.bitcoin AS
 (
   currency int4,
   amount  coin
-)
+);
+
+CREATE SCHEMA accounts;
+
+-- Execute orders.sql
+-- Execute accounts.sql
