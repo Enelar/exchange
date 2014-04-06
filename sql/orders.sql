@@ -40,13 +40,15 @@ CREATE TABLE "orders"."orders" (
 "amount" "public"."coin" NOT NULL,
 "remain" "public"."coin" NOT NULL,
 "appear" timestamp(6) DEFAULT now() NOT NULL,
-"price" "public"."coin" NOT NULL,
+"price" "public"."bitcoin" NOT NULL,
 PRIMARY KEY ("id"),
 FOREIGN KEY ("currency") REFERENCES "orders"."currency" ("id") ON DELETE RESTRICT ON UPDATE RESTRICT,
 
 CONSTRAINT "orders_remain_check" CHECK ((remain)::numeric <= (amount)::numeric),
 CONSTRAINT "orders_check" CHECK ((remain)::numeric >= (0)::numeric),
-CONSTRAINT "orders_amount_check" CHECK ((amount)::numeric > (0)::numeric)
+CONSTRAINT "orders_amount_check" CHECK ((amount)::numeric > (0)::numeric),
+
+CONSTRAINT "fictive_orders" CHECK (currency != (price).currency AND (price).amount = 1) 
 )
 WITH (OIDS=FALSE)
 ;
