@@ -94,3 +94,64 @@ CREATE OR REPLACE VIEW "orders"."active_sell" AS
   WHERE ((orders.is_buy = false) AND ((orders.remain)::numeric > (0)::numeric))
   ORDER BY orders.price DESC;
   
+-- ----------------------------
+-- Transactions
+-- ----------------------------
+
+CREATE TABLE "orders"."transactions"
+(
+  "id" int8 NOT NULL,
+  "donor" int4,
+  "donor_money" bitcoin NOT NULL,
+  "price" coin NOT NULL,
+  "recipient" int4 NOT NULL,
+  "recipient_money" bitcoin,
+  PRIMARY KEY ("id"),
+
+  CONSTRAINT "amounts_positive" 
+    CHECK
+    (
+      (donor_money).amount > 0 AND
+      (recipient_money).amount > 0
+    ),
+  CONSTRAINT "withdraw_or_replanisment_check" 
+    CHECK
+    (
+      donor != recipient OR 
+      (
+        (
+          (donor_money).currency = 0 OR 
+          (recipient_money).currency = 0
+        ) 
+        AND
+        (donor_money).amount = (recipient_money).amount
+        AND price = 1
+      )
+    ),
+  CONSTRAINT "forbid_gifts"
+    CHECK
+    (
+      donor = recipient OR
+      (donor_money).currency != (recipient_money).currency
+    ),
+  CONSTRAINT "foreign_transactions"
+    CHECK
+    (
+      donor = recipient OR 
+      (donor_money).currency != (recipient_money).currency
+    )
+)
+WITH (OIDS=FALSE)
+;
+
+DROP SEQUENCE IF EXISTS "orders"."transactions_id_seq";
+CREATE SEQUENCE "orders"."transactions_id_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1
+ OWNED BY "transactions"."id";
+
+ALTER TABLE "orders"."transactions"
+ALTER COLUMN id SET DEFAULT nextval('"orders".transactions_id_seq'::regclass);
