@@ -10,5 +10,18 @@ CREATE TYPE public.bitcoin AS
 
 CREATE SCHEMA accounts;
 
+CREATE TYPE public.invoice_status AS ENUM
+(
+  'LOCK'
+  ,
+  'UNLOCK'
+  ,
+  'CONVERT'
+  ,
+  'WITHDRAW'
+  ,
+  'DEPOSIT'
+);
+
 -- Execute orders.sql
 -- Execute accounts.sql

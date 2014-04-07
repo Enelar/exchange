@@ -61,3 +61,36 @@ CREATE SEQUENCE "accounts"."wallets_id_seq"
 
 ALTER TABLE "accounts"."wallets"
 ALTER COLUMN id SET DEFAULT nextval('"accounts".wallets_id_seq'::regclass);
+
+-- ----------------------------
+-- Invoice log
+-- ----------------------------
+
+CREATE TABLE "accounts"."receipt" (
+"id" int8 NOT NULL,
+"wallet" int4 NOT NULL,
+"amount" "public"."bitcoin" NOT NULL,
+"snap" timestamp(6) DEFAULT now() NOT NULL,
+"comment" varchar(255) COLLATE "default",
+"status" "public"."invoice_status",
+"transaction" int8,
+CONSTRAINT "invoice_pkey" PRIMARY KEY ("id"),
+CONSTRAINT "invoice_wallet_fkey" FOREIGN KEY ("wallet") REFERENCES "accounts"."wallets" ("id") ON DELETE RESTRICT ON UPDATE RESTRICT,
+CONSTRAINT "invoice_transaction_fkey" FOREIGN KEY ("transaction") REFERENCES "orders"."transactions" ("id") ON DELETE RESTRICT ON UPDATE RESTRICT
+)
+WITH (OIDS=FALSE)
+;
+
+DROP SEQUENCE IF EXISTS "accounts"."receipt_id_seq";
+CREATE SEQUENCE "accounts"."receipt_id_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1
+ OWNED BY "receipt"."id";
+
+ALTER TABLE "accounts"."receipt"
+ALTER COLUMN id SET DEFAULT nextval('"accounts".receipt_id_seq'::regclass);
+
+
