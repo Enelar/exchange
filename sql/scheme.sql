@@ -23,5 +23,8 @@ CREATE TYPE public.invoice_status AS ENUM
   'DEPOSIT'
 );
 
+CREATE SCHEMA mail;
+
 -- Execute orders.sql
 -- Execute accounts.sql
+-- Execute mail.sql
